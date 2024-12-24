@@ -7,8 +7,11 @@ from loguru import logger
 from classes.cloud.GoogleCloud import GoogleCloud
 from classes.controller.SIHController import SIHController
 
-# Adicionar SecretManager
 # Adicionar observabilidade (logfire, BigQuery)
+# Formatar métodos, docstring, etc.
+# Criar procedures
+# Criar arquitetura no Excalidraw
+# Fazer README
 
 
 def main(request):
@@ -40,7 +43,7 @@ def main(request):
     # Request report
     df = SIHController.request_RD_report_dataframe_format(uf, year, month)
 
-    # Access secret value
+    # Get secret value (JSON Service Account)
     google_cloud = GoogleCloud()
     sa_json = google_cloud.access_secret_from_secret_manager(secret_project_id, secret_id)
 
