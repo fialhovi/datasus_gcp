@@ -2,6 +2,7 @@ google-auth
 pandas
 loguru
 google-cloud-storage
+google-cloud-secret-manager
 duckdb
 pandas-gbq
 pysus
