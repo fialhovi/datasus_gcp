@@ -16,6 +16,7 @@ pandas-gbq = "^0.25.0"
 black = "^24.10.0"
 isort = "^5.13.2"
 taskipy = "^1.14.1"
+google-cloud-secret-manager = "^2.22.0"
 
 
 [build-system]
