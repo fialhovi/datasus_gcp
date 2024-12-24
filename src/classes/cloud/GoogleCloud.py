@@ -4,7 +4,7 @@ from typing import List
 import duckdb
 import pandas as pd
 import pandas_gbq
-from google.cloud import bigquery, storage
+from google.cloud import bigquery, secretmanager, storage
 from google.oauth2 import service_account
 from loguru import logger
 
@@ -98,9 +98,6 @@ class GoogleCloud:
                     logger.error(
                         f"Failed to remove local file {filename} in {local_path}: {e}"
                     )
-
-        except Exception as e:
-            logger.error(f"Error uploading files: {e}")
 
         except Exception as e:
             logger.error(f"Error uploading files: {e}")
@@ -251,6 +248,30 @@ class GoogleCloud:
 
         except Exception as e:
             logger.error(f"Error inserting data into BigQuery: {e}")
+
+    def access_secret_from_secret_manager(
+        self, secret_project_id: str, secret_id: str, version_id: str = "latest"
+    ):
+        """
+        Access a secret's value from GCP Secret Manager.
+
+        Parameters:
+        project_id: GCP Project ID
+        secret_id: Secret ID in Secret Manager
+        version_id: Version of the secret (default: 'latest')
+
+        Returns:
+        Secret value as a string.
+        """
+        client = secretmanager.SecretManagerServiceClient()
+
+        secret_name = (
+            f"projects/{secret_project_id}/secrets/{secret_id}/versions/{version_id}"
+        )
+        response = client.access_secret_version(request={"name": secret_name})
+        secret_value = response.payload.data.decode("UTF-8")
+
+        return secret_value
 
 
 # Create procedure

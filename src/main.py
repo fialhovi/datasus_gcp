@@ -25,7 +25,8 @@ def main(request):
     bucket_name_parquet = data_request.get("bucket_name_parquet")
 
     # sa_json = "config/service_account.json"
-    sa_json = os.getenv("SA_JSON")
+    secret_project_id = os.getenv("secret_project_id")
+    secret_id = os.getenv("secret_id")
 
     if not year or year == [""]:
         current_year = datetime.now().strftime("%y")
@@ -39,10 +40,14 @@ def main(request):
     # Request report
     df = SIHController.request_RD_report_dataframe_format(uf, year, month)
 
+    # Access secret value
+    google_cloud = GoogleCloud()
+    sa_json = google_cloud.access_secret_from_secret_manager(secret_project_id, secret_id)
+
     # Insert data in BigQuery
     df = df.astype(str)
     df["date_loading"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    google_cloud = GoogleCloud()
+
     google_cloud.insert_dataframe_into_bigquery(
         df, table_id, sa_json, partition_columns, gcp_project
     )
