@@ -1,19 +1,14 @@
-import glob
 import os
 from datetime import datetime
-from itertools import product
-from multiprocessing import Pool
 
-import pandas as pd
 from dateutil.relativedelta import relativedelta
 from loguru import logger
 
 from classes.cloud.GoogleCloud import GoogleCloud
 from classes.controller.SIHController import SIHController
 
-# Pre-commit
 # Adicionar SecretManager
-# Adicionar observabilidade
+# Adicionar observabilidade (logfire, BigQuery)
 
 
 def main(request):
@@ -29,7 +24,8 @@ def main(request):
     partition_columns = data_request.get("partition_columns")
     bucket_name_parquet = data_request.get("bucket_name_parquet")
 
-    sa_json = "config/service_account.json"
+    # sa_json = "config/service_account.json"
+    sa_json = os.getenv("SA_JSON")
 
     if not year or year == [""]:
         current_year = datetime.now().strftime("%y")

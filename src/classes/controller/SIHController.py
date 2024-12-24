@@ -81,15 +81,13 @@ class SIHController:
         Returns:
         pd.DataFrame: A combined DataFrame of all the processed reports.
         """
-        # Initialize the SIH object and load it
         sih = SIH().load()
 
-        # Try to fetch files
         try:
             files = sih.get_files("RD", uf=uf, year=year, month=month)
             if not files:
                 logger.warning("No files found for the specified parameters.")
-                return pd.DataFrame()  # Return an empty DataFrame if no files are found
+                return pd.DataFrame()
         except Exception as e:
             logger.error(f"Error fetching file list for RD reports: {e}")
             return pd.DataFrame()
