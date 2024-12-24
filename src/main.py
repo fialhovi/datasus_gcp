@@ -45,7 +45,9 @@ def main(request):
 
     # Get secret value (JSON Service Account)
     google_cloud = GoogleCloud()
-    sa_json = google_cloud.access_secret_from_secret_manager(secret_project_id, secret_id)
+    sa_json = google_cloud.access_secret_from_secret_manager(
+        secret_project_id, secret_id
+    )
 
     # Insert data in BigQuery
     df = df.astype(str)
