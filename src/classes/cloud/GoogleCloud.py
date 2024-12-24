@@ -217,7 +217,7 @@ class GoogleCloud:
                 client.get_table(table_ref)
                 table_exists = True
                 logger.info(f"Table `{table_id}` exists.")
-            except bigquery.NotFound:
+            except:
                 table_exists = False
                 logger.info(f"Table `{table_id}` does not exist. It will be created.")
 

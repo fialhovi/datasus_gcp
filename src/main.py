@@ -11,7 +11,6 @@ from loguru import logger
 from classes.cloud.GoogleCloud import GoogleCloud
 from classes.controller.SIHController import SIHController
 
-# Usar Black e Isort, talvez flake8
 # Pre-commit
 # Adicionar SecretManager
 # Adicionar observabilidade
@@ -46,7 +45,7 @@ def main(request):
 
     # Insert data in BigQuery
     df = df.astype(str)
-    df["insert_loading"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    df["date_loading"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     google_cloud = GoogleCloud()
     google_cloud.insert_dataframe_into_bigquery(
         df, table_id, sa_json, partition_columns, gcp_project
