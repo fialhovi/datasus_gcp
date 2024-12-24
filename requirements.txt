@@ -1,0 +1,7 @@
+google-auth
+pandas
+loguru
+google-cloud-storage
+duckdb
+pandas-gbq
+pysus
