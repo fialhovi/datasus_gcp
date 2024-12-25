@@ -25,7 +25,6 @@ def main(request):
     gcp_project = data_request.get("gcp_project")
     table_id = data_request.get("table_id")
     partition_columns = data_request.get("partition_columns")
-    bucket_name_parquet = data_request.get("bucket_name_parquet")
 
     # sa_json = "config/service_account.json"
     secret_project_id = os.getenv("secret_project_id")
@@ -69,7 +68,6 @@ class Request:
             "gcp_project": "datasus-prod",
             "table_id": "raw.tb_sih_rd",
             "partition_columns": ["UF_ZI", "ANO_CMPT", "MES_CMPT"],
-            "bucket_name_parquet": "raw_sih_rd_parquet",
             "uf": ["RJ", "SP", "MG", "ES"],
             "year": ["24"],
             "month": ["10"],
