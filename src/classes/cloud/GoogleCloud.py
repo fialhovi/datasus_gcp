@@ -218,7 +218,7 @@ class GoogleCloud:
                 table_exists = False
                 logger.info(f"Table `{table_id}` does not exist. It will be created.")
 
-            if table_exists:
+            if table_exists and partition_columns:
                 delete_conditions = " AND ".join(
                     [
                         f"{col} IN ({', '.join([f'\'{value}\'' for value in df[col].unique()])})"
@@ -248,6 +248,8 @@ class GoogleCloud:
 
         except Exception as e:
             logger.error(f"Error inserting data into BigQuery: {e}")
+
+        return
 
     def access_secret_from_secret_manager(
         self, secret_project_id: str, secret_id: str, version_id: str = "latest"

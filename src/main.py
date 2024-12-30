@@ -7,9 +7,9 @@ from loguru import logger
 from classes.cloud.GoogleCloud import GoogleCloud
 from classes.controller.SIHController import SIHController
 
+# Criar procedures
 # Adicionar observabilidade (logfire, BigQuery)
 # Formatar métodos, docstring, etc.
-# Criar procedures
 # Criar arquitetura no Excalidraw
 # Fazer README
 

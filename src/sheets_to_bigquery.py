@@ -23,4 +23,5 @@ google_cloud.insert_dataframe_into_bigquery(
     sa_json=sa_json,
     partition_columns="",
     gcp_project="datasus-prod",
+    if_exists="replace"
 )
