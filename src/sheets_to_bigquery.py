@@ -3,7 +3,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from classes.cloud.GoogleCloud import GoogleCloud
+from classes import GoogleCloud
 
 # secret_project_id = os.getenv("secret_project_id")
 # secret_id = os.getenv("secret_id")

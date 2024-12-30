@@ -4,8 +4,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from loguru import logger
 
-from classes.cloud.GoogleCloud import GoogleCloud
-from classes.controller.SIHController import SIHController
+from classes import GoogleCloud, SIHController
 
 # Criar procedures
 # Adicionar observabilidade (logfire, BigQuery)
