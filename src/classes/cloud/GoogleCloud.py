@@ -274,6 +274,3 @@ class GoogleCloud:
         secret_value = response.payload.data.decode("UTF-8")
 
         return secret_value
-
-
-# Create procedure
