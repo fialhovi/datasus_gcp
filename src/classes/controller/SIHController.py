@@ -116,38 +116,3 @@ class SIHController:
         else:
             logger.warning("No DataFrames were successfully processed.")
             return pd.DataFrame()
-
-    def dbc_to_parquet(dbc_files_directory: str = "./data/dbc") -> List:
-        """
-        Converts .dbc SIH files to .parquet and returns the list of generated .parquet file paths.
-
-        Parameters:
-        dbc_files_directory (str): Directory containing .dbc files.
-
-        Returns:
-        list: List of file paths for the converted .parquet files.
-        """
-        output_directory = "./data/parquet"
-        os.makedirs(output_directory, exist_ok=True)
-
-        files = glob.glob(os.path.join(dbc_files_directory, "*.dbc"))
-        sih = SIH().load()
-        parquet_files = []
-
-        for file in files:
-            try:
-                logger.info(f"Processing file: {file}")
-                parquet_file = sih.download([file])
-
-                output_path = os.path.join(
-                    output_directory, os.path.basename(parquet_file)
-                )
-                os.rename(parquet_file, output_path)
-                logger.info(f"Converted to: {output_path}")
-
-                parquet_files.append(output_path)
-
-            except Exception as e:
-                logger.error(f"Error reading {file}: {e}")
-
-        return parquet_files
