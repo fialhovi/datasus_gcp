@@ -19,15 +19,19 @@ class SIHController:
 
     def request_one_RD_report_dbc_format(uf: str, year: str, month: str) -> None:
         """
-        Downloads a single RD report file for a specific Brazilian state, year, and month from the SIH-SUS FTP server.
+        Downloads a single RD report file in DBC format for a specific state, year, and month from the SIH-SUS FTP server.
 
         Parameters:
-        uf (str): The two-letter Brazilian state code (e.g., 'SP' for São Paulo, 'RJ' for Rio de Janeiro).
-        year (str): The four-digit year (e.g., '2024') indicating the year of the report.
-        month (str): The two-digit month (e.g., '01' for January, '12' for December) indicating the month of the report.
+        uf (str): Two-letter Brazilian state code (e.g., 'SP' for São Paulo, 'RJ' for Rio de Janeiro).
+        year (str): Two-digit year (e.g., '24') indicating the year of the report.
+        month (str): Two-digit month (e.g., '01' for January, '12' for December).
 
-        Returns:
-        None: Performs the download operation and logs relevant messages but does not return any value.
+        Saves:
+        A `.dbc` file to the local directory `./data/dbc/` under the name `RD<uf><year><month>.dbc`.
+
+        Raises:
+        urllib.error.URLError: If there is a URL-related error during download.
+        Exception: For any other unexpected error.
         """
         url = f"ftp://ftp.datasus.gov.br/dissemin/publicos/SIHSUS/200801_/Dados/RD{uf}{year}{month}.dbc"
         file_path = f"./data/dbc/RD{uf}{year}{month}.dbc"
@@ -50,17 +54,21 @@ class SIHController:
         params: List[Tuple[str, str, str]]
     ) -> None:
         """
-        Downloads multiple RD report files for specified Brazilian states, years, and months using parallel processing.
+        Downloads multiple RD report files in DBC format using parallel processing.
 
         Parameters:
         params (List[Tuple[str, str, str]]):
-            A list of tuples, where each tuple contains:
+            A list of tuples where each tuple contains:
             - A two-letter Brazilian state code (e.g., 'SP' for São Paulo).
-            - A four-digit year as a string (e.g., '24').
+            - A two-digit year as a string (e.g., '24').
             - A two-digit month as a string (e.g., '01' for January).
 
-        Returns:
-        None: Initiates parallel downloads and does not return any value.
+        Details:
+        - Uses parallel processing with a pool size of 8 for concurrent downloads.
+        - Calls `request_one_RD_report_dbc_format` internally for each tuple.
+
+        Raises:
+        Exception: If any error occurs during parallel processing.
         """
         with Pool(8) as pool:
             pool.starmap(SIHController.request_one_RD_report_dbc_format, params)
@@ -71,15 +79,24 @@ class SIHController:
         uf: str, year: str, month: str
     ) -> pd.DataFrame:
         """
-        Downloads and converts RD reports for the specified parameters to a combined DataFrame.
+        Downloads and processes RD report files into a combined DataFrame.
 
         Parameters:
-        uf (str): The two-letter Brazilian state code (e.g., 'SP' for São Paulo).
-        year (str): The four-digit year (e.g., '24') indicating the year of the report.
-        month (str): The two-digit month (e.g., '01' for January) indicating the month of the report.
+        uf (str): Two-letter Brazilian state code (e.g., 'SP' for São Paulo).
+        year (str): Two-digit year (e.g., '24') indicating the year of the report.
+        month (str): Two-digit month (e.g., '01' for January).
 
         Returns:
-        pd.DataFrame: A combined DataFrame of all the processed reports.
+        pd.DataFrame: 
+            A combined DataFrame of all processed RD reports for the specified state, year, and month.
+            Returns an empty DataFrame if no files are available or an error occurs.
+
+        Raises:
+        Exception: For errors during file fetching, processing, or DataFrame combination.
+
+        Notes:
+        - The method relies on the `pysus` library to access SIH-SUS FTP servers.
+        - Files are downloaded and converted to Parquet before loading into DataFrames.
         """
         sih = SIH().load()
 

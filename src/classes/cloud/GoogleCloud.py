@@ -14,7 +14,15 @@ class GoogleCloud:
         self.credentials = None
 
     def authenticate(self, sa_json: str) -> service_account.Credentials:
-        """Authenticate using a service account JSON file."""
+        """
+        Authenticate using a service account JSON file.
+
+        Parameters:
+        sa_json (str): Path to the Service Account JSON file.
+
+        Returns:
+        google.oauth2.service_account.Credentials: The authenticated credentials object.
+        """
         try:
             self.credentials = service_account.Credentials.from_service_account_file(
                 sa_json
@@ -38,11 +46,8 @@ class GoogleCloud:
         Parameters:
         bucket_name (str): The unique name for the bucket.
         sa_json (str): Path to the Service Account JSON file.
-        location (str): The geographic location for the bucket (default is "US").
-        storage_class (str): The storage class for the bucket (default is "STANDARD").
-
-        Returns:
-        None
+        location (str): The geographic location for the bucket (default: "US").
+        storage_class (str): The storage class for the bucket (default: "STANDARD").
         """
         client = storage.Client.from_service_account_json(sa_json)
         bucket = client.bucket(bucket_name)
@@ -54,7 +59,7 @@ class GoogleCloud:
             f"Bucket {new_bucket.name} created in {new_bucket.location} with storage class {new_bucket.storage_class}."
         )
 
-        return
+        return None
 
     def save_local_files_in_storage(
         self,
@@ -67,13 +72,13 @@ class GoogleCloud:
         Uploads files from a local directory to a specified Google Cloud Storage bucket.
 
         Parameters:
-        filenames (List[str]): List of filenames to be uploaded.
-        source_directory (str): The local directory where the files are located.
-        bucket_name (str): The name of the GCS bucket.
-        sa_json (str): Path to the Service Account JSON file for authentication.
+        filenames (List[str]): Names of files to upload.
+        source_directory (str): Local directory containing the files.
+        bucket_name (str): Name of the destination GCS bucket.
+        sa_json (str): Path to the Service Account JSON file.
 
-        Returns:
-        None
+        Raises:
+        FileNotFoundError: If any file in the specified directory does not exist.
         """
         try:
             storage_client = storage.Client.from_service_account_json(sa_json)
@@ -113,8 +118,8 @@ class GoogleCloud:
         bucket_name (str): The name of the GCS bucket.
         sa_json (str): Path to the Service Account JSON file for authentication.
 
-        Returns:
-        None
+        Raises:
+        FileNotFoundError: If any file in the specified directory does not exist.
         """
         try:
             storage_client = storage.Client.from_service_account_json(sa_json)
@@ -148,7 +153,8 @@ class GoogleCloud:
         sa_json (str): Path to the Service Account JSON file for authentication.
 
         Returns:
-        pd.DataFrame: A Pandas DataFrame containing the merged data from the Parquet files.
+        pd.DataFrame: DataFrame containing merged data from Parquet files.
+                    Returns an empty DataFrame in case of errors.
         """
         try:
             storage_client = storage.Client.from_service_account_json(sa_json)
@@ -190,18 +196,21 @@ class GoogleCloud:
         if_exists: str = "append",
     ) -> None:
         """
-        Inserts a DataFrame into a BigQuery table. Deletes existing data for the same partition before inserting if the table exists.
+        Inserts a DataFrame into a BigQuery table with optional partition-based deletion.
 
         Parameters:
-        df (pd.DataFrame): The DataFrame to be inserted.
-        table_id (str): The full table ID in the format `dataset.table`.
-        sa_json (str): Path to the Service Account JSON file for authentication.
-        partition_columns (List[str]): List of column names used for partitioning (e.g., ["UF_ZI", "ANO_CMPT", "MES_CMPT"]).
-        gcp_project (str): The Google Cloud project ID (e.g., "datasus-prod").
-        if_exists (str): Behavior when the table exists. Options are "fail", "replace", or "append" (default: "append").
+        df (pd.DataFrame): DataFrame to insert.
+        table_id (str): Full table ID in the format `dataset.table`.
+        sa_json (str): Path to the Service Account JSON file.
+        partition_columns (List[str]): Column names for partition deletion (e.g., ["column1", "column2"]).
+        gcp_project (str): GCP Project ID.
+        if_exists (str): Behavior when the table exists:
+                        - "fail": Raise an error.
+                        - "replace": Overwrite the table.
+                        - "append": Append to the table (default).
 
-        Returns:
-        None
+        Raises:
+        Exception: If an error occurs during insertion.
         """
         try:
             self.credentials = self.authenticate(sa_json)
@@ -258,12 +267,12 @@ class GoogleCloud:
         Access a secret's value from GCP Secret Manager.
 
         Parameters:
-        project_id: GCP Project ID
-        secret_id: Secret ID in Secret Manager
-        version_id: Version of the secret (default: 'latest')
+        secret_project_id (str): GCP Project ID.
+        secret_id (str): Secret ID in Secret Manager.
+        version_id (str): Version of the secret (default: 'latest').
 
         Returns:
-        Secret value as a string.
+        str: The secret value as a string.
         """
         client = secretmanager.SecretManagerServiceClient()
 
