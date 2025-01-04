@@ -87,7 +87,7 @@ class SIHController:
         month (str): Two-digit month (e.g., '01' for January).
 
         Returns:
-        pd.DataFrame: 
+        pd.DataFrame:
             A combined DataFrame of all processed RD reports for the specified state, year, and month.
             Returns an empty DataFrame if no files are available or an error occurs.
 

@@ -1,3 +1,4 @@
+import json
 import os
 from typing import List
 
@@ -15,22 +16,32 @@ class GoogleCloud:
 
     def authenticate(self, sa_json: str) -> service_account.Credentials:
         """
-        Authenticate using a service account JSON file.
+        Authenticate using a service account JSON file or JSON string.
 
         Parameters:
-        sa_json (str): Path to the Service Account JSON file.
+        sa_json (str): Path to the Service Account JSON file or the JSON content as a string.
 
         Returns:
         google.oauth2.service_account.Credentials: The authenticated credentials object.
         """
         try:
-            self.credentials = service_account.Credentials.from_service_account_file(
-                sa_json
-            )
-            logger.info("Authentication successful.")
-
+            if os.path.exists(sa_json):
+                self.credentials = (
+                    service_account.Credentials.from_service_account_file(sa_json)
+                )
+                logger.info("Authentication successful using service account file.")
+            else:
+                self.credentials = (
+                    service_account.Credentials.from_service_account_info(
+                        json.loads(sa_json)
+                    )
+                )
+                logger.info(
+                    "Authentication successful using service account JSON content."
+                )
         except Exception as e:
             logger.error(f"Authentication error: {e}")
+            self.credentials = None
 
         return self.credentials
 
@@ -262,7 +273,7 @@ class GoogleCloud:
 
     def access_secret_from_secret_manager(
         self, secret_project_id: str, secret_id: str, version_id: str = "latest"
-    ):
+    ) -> str:
         """
         Access a secret's value from GCP Secret Manager.
 
