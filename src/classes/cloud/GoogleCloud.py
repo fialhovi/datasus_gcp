@@ -46,6 +46,7 @@ class GoogleCloud:
         return self.credentials
 
     def create_bucket_in_storage(
+        self,
         bucket_name: str,
         sa_json: str,
         location: str = "US",
@@ -60,7 +61,8 @@ class GoogleCloud:
         location (str): The geographic location for the bucket (default: "US").
         storage_class (str): The storage class for the bucket (default: "STANDARD").
         """
-        client = storage.Client.from_service_account_json(sa_json)
+        credentials = self.authenticate(sa_json)
+        client = storage.Client(credentials=credentials)
         bucket = client.bucket(bucket_name)
         bucket.storage_class = storage_class
 
@@ -92,7 +94,12 @@ class GoogleCloud:
         FileNotFoundError: If any file in the specified directory does not exist.
         """
         try:
-            storage_client = storage.Client.from_service_account_json(sa_json)
+            self.credentials = self.authenticate(sa_json)
+            if not self.credentials:
+                logger.error("Failed to authenticate. Cannot proceed.")
+                return
+
+            storage_client = storage.Client(credentials=self.credentials)
             bucket = storage_client.bucket(bucket_name)
 
             for filename in filenames:
@@ -133,7 +140,12 @@ class GoogleCloud:
         FileNotFoundError: If any file in the specified directory does not exist.
         """
         try:
-            storage_client = storage.Client.from_service_account_json(sa_json)
+            self.credentials = self.authenticate(sa_json)
+            if not self.credentials:
+                logger.error("Failed to authenticate. Cannot proceed.")
+                return
+
+            storage_client = storage.Client(credentials=self.credentials)
             bucket = storage_client.bucket(bucket_name)
 
             for file_path in file_paths:
@@ -168,7 +180,12 @@ class GoogleCloud:
                     Returns an empty DataFrame in case of errors.
         """
         try:
-            storage_client = storage.Client.from_service_account_json(sa_json)
+            self.credentials = self.authenticate(sa_json)
+            if not self.credentials:
+                logger.error("Failed to authenticate. Cannot proceed.")
+                return pd.DataFrame()
+
+            storage_client = storage.Client(credentials=self.credentials)
             bucket = storage_client.bucket(bucket_name)
 
             temp_dir = "/tmp/parquet_files"
