@@ -55,7 +55,8 @@ def main(request):
         df, table_id, sa_json, partition_columns, gcp_project
     )
 
-    return logger.info("Extraction of DataSUS SIH RD completed successfully.")
+    logger.info("Extraction of DataSUS SIH RD completed successfully.")
+    return {"status": "success", "message": "Extraction completed successfully."}, 200
 
 
 class Request:
