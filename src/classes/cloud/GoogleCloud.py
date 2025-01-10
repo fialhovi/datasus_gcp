@@ -3,11 +3,15 @@ import os
 from typing import List
 
 import duckdb
+import logfire
 import pandas as pd
 import pandas_gbq
 from google.cloud import bigquery, secretmanager, storage
 from google.oauth2 import service_account
 from loguru import logger
+
+logfire.configure()
+logger.configure(handlers=[logfire.loguru_handler()])
 
 
 class GoogleCloud:

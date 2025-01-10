@@ -1,16 +1,19 @@
 import os
 from datetime import datetime
 
+import logfire
 from dateutil.relativedelta import relativedelta
 from loguru import logger
 
 from classes import GoogleCloud, SIHController
 
-# Adicionar observabilidade (logfire, BigQuery)
+# Adicionar observabilidade (Logfire, BigQuery, Loguru) -> Add ALERTA
 # Adicionar validação de df com Pandera
 # Formatar métodos, docstring, etc.
 # Criar arquitetura no Excalidraw
 # Fazer README
+
+logger.configure(handlers=[logfire.loguru_handler()])
 
 
 def main(request):

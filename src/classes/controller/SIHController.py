@@ -5,9 +5,12 @@ import urllib.request
 from multiprocessing import Pool
 from typing import List, Tuple
 
+import logfire
 import pandas as pd
 from loguru import logger
 from pysus.ftp.databases.sih import SIH
+
+logger.configure(handlers=[logfire.loguru_handler()])
 
 
 class SIHController:
