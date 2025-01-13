@@ -7,8 +7,7 @@ from loguru import logger
 
 from classes import GoogleCloud, SIHController
 
-# Adicionar observabilidade (Logfire, BigQuery, Loguru) -> Add ALERTA
-# Adicionar validação de df com Pandera
+# Adicionar validação de df com Pandera ou Pydantic
 # Formatar métodos, docstring, etc.
 # Criar arquitetura no Excalidraw
 # Fazer README
