@@ -11,6 +11,9 @@ from classes import GoogleCloud, SIHController
 # Formatar métodos, docstring, etc.
 # Criar arquitetura no Excalidraw
 # Fazer README
+# Usar OpenMetaData (Data Catalog)
+# Testar Dataform na transformação
+# Testar Apache Superset como BI
 
 logger.configure(handlers=[logfire.loguru_handler()])
 
